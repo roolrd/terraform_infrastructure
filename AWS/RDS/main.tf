@@ -19,11 +19,14 @@ data "aws_ami" "latest_amazon_linux" {
   }
 }
 
+
+/*
 resource "aws_instance" "jenkins_server" {
   instance_type          = "t2.micro"
   ami                    = data.aws_ami.latest_amazon_linux.id
   vpc_security_group_ids = [aws_security_group.other_sg.id]
   subnet_id              = aws_subnet.public_subnets[0].id
+  key_name               = "mcdzk-frankfurt-key"
   tags = {
     Name     = "Jenkins Server"
     Avaliabl = "SubNet-Public-0 SGroup Other"
@@ -40,36 +43,38 @@ resource "aws_instance" "jenkins_node_1" {
     Avaliabl = "SubNet-Public-0 SGroup RDS"
   }
 }
-
+*/
 resource "aws_instance" "docker_node_1" {
   instance_type          = "t2.micro"
   ami                    = data.aws_ami.latest_amazon_linux.id
   vpc_security_group_ids = [aws_security_group.other_sg.id]
-  subnet_id              = aws_subnet.privat_subnets[0].id
+  subnet_id              = aws_subnet.private_subnets[0].id
+  key_name               = "mcdzk-frankfurt-key"
   tags = {
     Name     = "Docker Node 1"
     Avaliabl = "SubNet-Privat SGroup others"
   }
 }
-
+/*
 resource "aws_instance" "docker_node_2" {
   instance_type          = "t2.micro"
   ami                    = data.aws_ami.latest_amazon_linux.id
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  subnet_id              = aws_subnet.privat_subnets[0].id
+  subnet_id              = aws_subnet.private_subnets[0].id
   tags = {
     Name     = "Docker Node 2"
     Avaliabl = "SubNet-Privat SGroup RDS"
   }
 }
-
+*/
 resource "aws_instance" "docker_node_3" {
   instance_type          = "t2.micro"
   ami                    = data.aws_ami.latest_amazon_linux.id
   vpc_security_group_ids = [aws_security_group.other_sg.id]
-  subnet_id              = aws_subnet.public_subnets[1].id
+  subnet_id              = aws_subnet.private_subnets[1].id
+  key_name               = "mcdzk-frankfurt-key"
   tags = {
     Name     = "Docker Node 3"
-    Avaliabl = "SubNet-Public-1 SGroup Other"
+    Avaliabl = "SubNet-Private-1 SGroup Other"
   }
 }
