@@ -1,7 +1,6 @@
 
 
-//vpc_zone_identifier  = [element(aws_subnet.public_subnets[*].id, count.index)]
-
+/*
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name = "rds-subnet-group"
   //count      = length(var.private_subnet_cidrs)
@@ -29,7 +28,8 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot    = true
   //publicly_accessible = true
   apply_immediately = true
-  /*
+  */
+/*
   s3_import {
     source_engine         = "mysql"
     source_engine_version = "8.0.16"
@@ -38,12 +38,13 @@ resource "aws_db_instance" "mysql" {
     ingestion_role        = "arn:aws:iam::063320960030:role/role-xtrabackup-rds-restore"
   }
   */
+/*
 }
 
 output "base-mysql-rds-endpoint" {
   value = aws_db_instance.mysql.endpoint
 }
-
+*/
 
 /*
 data "http" "icanhazip" {

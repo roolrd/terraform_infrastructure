@@ -1,15 +1,3 @@
-provider "aws" {
-  region = "eu-central-1"
-}
-
-terraform {
-  backend "s3" {
-    bucket = "base-of-product-roolrd"
-    key    = "RDS/terraform.tfstate"
-    region = "eu-central-1"
-  }
-}
-
 
 data "aws_availability_zones" "avaliable" {}
 
