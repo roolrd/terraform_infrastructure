@@ -6,7 +6,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
   name = "rds-subnet-group"
   //count      = length(var.private_subnet_cidrs)
   //subnet_ids = [element(aws_subnet.private_subnets[*].id, count.index)]
-  subnet_ids = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id]
+  subnet_ids = [aws_subnet.public_subnets[0].id, aws_subnet.public_subnets[1].id]
 }
 
 data "aws_ssm_parameter" "my_rds_password" {
@@ -29,11 +29,19 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot    = true
   //publicly_accessible = true
   apply_immediately = true
+  s3_import {
+    source_engine         = "mysql"
+    source_engine_version = "8.0.16"
+    bucket_name           = "base-of-product-roolrd"
+    bucket_prefix         = "base_products_backup.sql"
+    ingestion_role        = "arn:aws:iam::063320960030:role/role-xtrabackup-rds-restore"
+  }
 }
 
 output "base-mysql-rds-endpoint" {
   value = aws_db_instance.mysql.endpoint
 }
+
 
 /*
 data "http" "icanhazip" {
