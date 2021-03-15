@@ -29,6 +29,7 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot    = true
   //publicly_accessible = true
   apply_immediately = true
+  /*
   s3_import {
     source_engine         = "mysql"
     source_engine_version = "8.0.16"
@@ -36,6 +37,7 @@ resource "aws_db_instance" "mysql" {
     bucket_prefix         = "base_products_backup.sql"
     ingestion_role        = "arn:aws:iam::063320960030:role/role-xtrabackup-rds-restore"
   }
+  */
 }
 
 output "base-mysql-rds-endpoint" {
