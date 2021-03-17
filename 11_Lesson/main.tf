@@ -3,7 +3,6 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-
 data "aws_ami" "latest_aws_linux_2" {
   most_recent = true
   owners      = ["amazon"]
