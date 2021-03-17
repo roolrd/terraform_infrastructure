@@ -3,6 +3,7 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+/*
 terraform {
   backend "s3" {
     bucket = "base-of-product-roolrd"
@@ -10,7 +11,7 @@ terraform {
     region = "eu-central-1"
   }
 }
-
+*/
 resource "aws_ecs_cluster" "base_of_product" {
   name = "base-of-product"
 }

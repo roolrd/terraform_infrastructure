@@ -51,7 +51,7 @@ resource "aws_subnet" "private_subnets" {
   cidr_block        = element(var.private_subnet_cidrs, count.index)
   availability_zone = data.aws_availability_zones.avaliable.names[count.index]
   tags = {
-    Name = "${var.project}-private-subnet"
+    Name = "${var.project}-Rool-private-subnet-${count.index + 1}"
   }
 }
 /*
