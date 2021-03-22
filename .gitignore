@@ -2,3 +2,5 @@
 .git/**
 .terraform/
 .terraform*
+terraform.tfstate*
+*.sql

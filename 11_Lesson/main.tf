@@ -2,6 +2,50 @@
 provider "aws" {
   region = "eu-central-1"
 }
+#==========Network==================
+data "aws_availability_zones" "avaliable" {}
+
+data "aws_vpc" "web_vpc" {
+  tags = {
+    Name = "base-Rool-VPC"
+  }
+}
+
+data "aws_internet_gateway" "main_base" {
+  tags = {
+    Name = "base-Rool-IGW"
+  }
+}
+
+resource "aws_subnet" "web_public_subnets" {
+  count                   = length(var.web_public_subnet_cidrs)
+  vpc_id                  = data.aws_vpc.main_base.id
+  cidr_block              = element(var.web_public_subnet_cidrs, count.index)
+  availability_zone       = data.aws_availability_zones.avaliable.names[count.index]
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "${var.project}-Rool-web-public-subnet-${count.index + 1}"
+  }
+}
+
+resource "aws_route_table" "web_public_subnets" {
+  vpc_id = data.aws_vpc.main_base.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = data.aws_internet_gateway.main_base.internet_gateway_id
+  }
+  tags = {
+    Name = "${var.project}-route-public-subnet"
+  }
+}
+
+resource "aws_route_table_association" "web_route_subnet" {
+  count          = length(aws_subnet.web_public_subnets[*].id)
+  subnet_id      = element(aws_subnet.web_public_subnets[*].id, count.index)
+  route_table_id = aws_route_table.web_public_subnets.id
+}
+
+#============Servers======================
 
 data "aws_ami" "latest_aws_linux_2" {
   most_recent = true
@@ -11,7 +55,7 @@ data "aws_ami" "latest_aws_linux_2" {
     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 }
-data "aws_availability_zones" "available" {}
+
 #----------------------------------------------------
 resource "aws_security_group" "web" {
   name = "Dynamic_security_group"
@@ -43,7 +87,7 @@ resource "aws_launch_configuration" "web" {
   image_id        = data.aws_ami.latest_aws_linux_2.id
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.web.id]
-  user_data       = file("/home/ruslan/Terraform_learning/11_Lesson/user_data.sh")
+  user_data       = file("./user_data.sh")
   lifecycle {
     create_before_destroy = true
   }
@@ -97,9 +141,11 @@ resource "aws_elb" "web" {
   }
 }
 
+/*
 resource "aws_default_subnet" "default_az1" {
   availability_zone = data.aws_availability_zones.available.names[0]
 }
 resource "aws_default_subnet" "default_az2" {
   availability_zone = data.aws_availability_zones.available.names[1]
 }
+*/
