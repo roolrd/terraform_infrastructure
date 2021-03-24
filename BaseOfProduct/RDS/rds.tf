@@ -30,11 +30,10 @@ data "aws_ssm_parameter" "my_rds_password" {
 }
 
 resource "aws_db_instance" "mysql" {
-  identifier        = "base-mysql-rds"
-  allocated_storage = 5
-  engine            = "mysql"
-  engine_version    = "8.0.16"
-  //engine_version = "8.0.20"
+  identifier             = "base-mysql-rds"
+  allocated_storage      = 5
+  engine                 = "mysql"
+  engine_version         = "8.0.16"
   instance_class         = "db.t2.micro"
   name                   = "terraform_rds"
   username               = "root"

@@ -134,3 +134,29 @@ resource "aws_elb" "web" {
     Name = "Webserver-ELB"
   }
 }
+
+resource "aws_network_interface" "dev_server" {
+  subnet_id       = data.terraform_remote_state.network.outputs.Web_public_subnet_ids[0]
+  security_groups = [data.terraform_remote_state.secur_gr.outputs.web_secur_gr_id]
+  private_ips     = ["10.0.30.101"]
+}
+
+resource "aws_instance" "dev_server" {
+  ami           = data.aws_ami.latest_aws_linux_2.id
+  instance_type = "t2.micro"
+  //subnet_id       = data.terraform_remote_state.network.outputs.Web_public_subnet_ids[0]
+  //security_groups = [data.terraform_remote_state.secur_gr.outputs.web_secur_gr_id]
+  key_name = "Web_servers"
+  user_data = templatefile("user_data.sh.tpl", { pass = data.aws_ssm_parameter.my_rds_password.value,
+  dburl = data.terraform_remote_state.rds.outputs.rds_endpoint })
+
+  network_interface {
+    network_interface_id = aws_network_interface.dev_server.id
+    device_index         = 0
+  }
+
+  tags = {
+    Name = "dev-web-server"
+
+  }
+}
